@@ -47,4 +47,18 @@ class User extends Authenticatable implements MustVerifyEmail
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Allows for Passport token access via username or email.
+     *
+     * @param $username
+     * @return User
+     */
+    public function findForPassport($username): User {
+        if (filter_var($username, FILTER_VALIDATE_EMAIL)) {
+            return self::where('email', $username)->first();
+        } else {
+            return self::where('username', $username)->first();
+        }
+    }
 }
