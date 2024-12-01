@@ -37,9 +37,7 @@ class PasswordResetLinkController extends Controller
         );
 
         if ($request->expectsJson()) {
-            return $status == Password::RESET_LINK_SENT
-                ? response()->json(['status' => __($status)])
-                : response()->json(['email' => __($status)]);
+            return $this->statusResponse($status);
         } else {
             return $status == Password::RESET_LINK_SENT
                 ? back()->with('status', __($status))
@@ -47,4 +45,38 @@ class PasswordResetLinkController extends Controller
                     ->withErrors(['email' => __($status)]);
         }
     }
+
+    private function statusCode($status): int
+    {
+        switch ($status) {
+            case Password::INVALID_USER:
+                return Response::HTTP_UNPROCESSABLE_ENTITY;
+            case Password::INVALID_TOKEN:
+                return Response::HTTP_UNAUTHORIZED;
+            case Password::RESET_THROTTLED:
+                return Response::HTTP_TOO_MANY_REQUESTS;
+            default:
+                return Response::HTTP_OK;
+        }
+    }
+
+    private function statusResponse($status): Response
+    {
+        $formatted = collect(['message' => __($status)]);
+        switch ($status) {
+            case Password::INVALID_USER:
+            case Password::INVALID_TOKEN:
+                $formatted->put(
+                    'errors', [
+                        'email' => __($status)
+                    ]
+                );
+                break;
+        }
+        return response()->json(
+            $formatted->toArray(),
+            $this->statusCode($status)
+        );
+    }
+
 }

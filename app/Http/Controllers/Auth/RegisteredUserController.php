@@ -49,7 +49,8 @@ class RegisteredUserController extends Controller
 
         if ($request->expectsJson()) {
             return response()->json([
-                'message' => 'User created successfully'
+                'message' => 'User created successfully',
+                201
             ]);
         } else {
             return redirect(route('dashboard', absolute: false));
