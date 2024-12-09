@@ -48,7 +48,8 @@ class AuthenticatedSessionController extends Controller
 
         if ($request->expectsJson()) {
             return \response()->json([
-                'message' => 'You are logged out.'
+                'status' => 'auth.logged_out',
+                'message' => __('auth.logged_out'),
             ], Response::HTTP_OK);
         } else {
             return redirect('/');

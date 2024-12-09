@@ -62,7 +62,10 @@ class PasswordResetLinkController extends Controller
 
     private function statusResponse($status): Response
     {
-        $formatted = collect(['message' => __($status)]);
+        $formatted = collect([
+            'status' => $status,
+            'message' => __($status)
+        ]);
         switch ($status) {
             case Password::INVALID_USER:
             case Password::INVALID_TOKEN:

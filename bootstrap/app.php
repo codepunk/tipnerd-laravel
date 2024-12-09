@@ -13,11 +13,12 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->validateCsrfTokens(except: [
-            'register',
+            'email/verification-notification',
             'forgot-password',
             'login',
             'logout',
             'oauth/*',
+            'register',
             'reset-password'
         ]);
     })
